@@ -1,0 +1,94 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Assets/Animations/Player/Dash.tres" type="Animation" id=1]
+[ext_resource path="res://Assets/Animations/Player/DashAttack.tres" type="Animation" id=2]
+[ext_resource path="res://Assets/Animations/Player/WallSlide.tres" type="Animation" id=3]
+[ext_resource path="res://Assets/Player_Sprites/HeroKnight/HeroKnight.png" type="Texture" id=25]
+[ext_resource path="res://Assets/Animations/Player/Run.tres" type="Animation" id=26]
+[ext_resource path="res://Assets/Animations/Player/Idle.tres" type="Animation" id=27]
+[ext_resource path="res://Scenes/Player.gd" type="Script" id=28]
+[ext_resource path="res://Assets/Animations/Player/Attack01.tres" type="Animation" id=29]
+[ext_resource path="res://Assets/Animations/Player/Fall.tres" type="Animation" id=30]
+[ext_resource path="res://Assets/Animations/Player/Jump.tres" type="Animation" id=31]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 8, 17 )
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Inner/Sprite/AttackArea/CollisionPolygon2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
+[node name="Player" type="KinematicBody2D" groups=["player"]]
+collision_layer = 2
+script = ExtResource( 28 )
+
+[node name="WallCheck" type="RayCast2D" parent="."]
+position = Vector2( -8, -21 )
+enabled = true
+cast_to = Vector2( -6, 0 )
+
+[node name="Timers" type="Node2D" parent="."]
+
+[node name="WallJumpTimer" type="Timer" parent="Timers"]
+wait_time = 0.1
+one_shot = true
+
+[node name="CoyoteTimer" type="Timer" parent="Timers"]
+wait_time = 0.2
+one_shot = true
+
+[node name="DashTimer" type="Timer" parent="Timers"]
+wait_time = 0.5
+one_shot = true
+
+[node name="GhostTimer" type="Timer" parent="Timers"]
+wait_time = 0.075
+one_shot = true
+
+[node name="FlickTimer" type="Timer" parent="Timers"]
+wait_time = 0.05
+one_shot = true
+
+[node name="Inner" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="Inner"]
+position = Vector2( 0, -26 )
+texture = ExtResource( 25 )
+hframes = 10
+vframes = 9
+frame = 85
+
+[node name="AttackArea" type="Area2D" parent="Inner/Sprite"]
+position = Vector2( 0, 26 )
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Inner/Sprite/AttackArea"]
+polygon = PoolVector2Array( 13, -3, 29, -6, 47, -14, 52, -25, 49, -40, 34, -49, 6, -53, -15, -52, -17, -48, -14, -46, 2, -45, 14, -42 )
+disabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -18 )
+shape = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Attack01 = ExtResource( 29 )
+anims/Dash = ExtResource( 1 )
+anims/DashAttack = ExtResource( 2 )
+anims/Fall = ExtResource( 30 )
+anims/Idle = ExtResource( 27 )
+anims/Jump = ExtResource( 31 )
+anims/RESET = SubResource( 4 )
+anims/Run = ExtResource( 26 )
+anims/WallSlide = ExtResource( 3 )
